@@ -21,6 +21,7 @@ let package = Package(
       name: "OpenTelemetryProtocolExporterHTTP", targets: ["OpenTelemetryProtocolExporterHttp"]
     ),
     .library(name: "PersistenceExporter", targets: ["PersistenceExporter"]),
+    .library(name: "SessionSamplerExporter", targets: ["SessionSamplerExporter"]),
     .library(name: "InMemoryExporter", targets: ["InMemoryExporter"]),
     .library(name: "OTelSwiftLog", targets: ["OTelSwiftLog"]),
     .library(name: "BaggagePropagationProcessor", targets: ["BaggagePropagationProcessor"]),
@@ -111,6 +112,15 @@ let package = Package(
       exclude: ["README.md"]
     ),
     .target(
+      name: "SessionSamplerExporter",
+      dependencies: [
+        .product(name: "OpenTelemetrySdk", package: "opentelemetry-swift-core"),
+        "PersistenceExporter",
+        "Sessions"
+      ],
+      path: "Sources/Exporters/SessionSamplerExporter"
+    ),
+    .target(
       name: "BaggagePropagationProcessor",
       dependencies: [
         .product(name: "OpenTelemetryApi", package: "opentelemetry-swift-core"),
@@ -165,6 +175,11 @@ let package = Package(
       name: "PersistenceExporterTests",
       dependencies: ["PersistenceExporter"],
       path: "Tests/ExportersTests/PersistenceExporter"
+    ),
+    .testTarget(
+      name: "SessionSamplerExporterTests",
+      dependencies: ["SessionSamplerExporter", "Sessions"],
+      path: "Tests/ExportersTests/SessionSamplerExporter"
     ),
     .testTarget(
       name: "ContribTests",
